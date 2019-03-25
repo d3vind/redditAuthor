@@ -23,7 +23,7 @@ def get_comments_from_reddit_api(comment_ids):
 userCommentAuthorList = []
 userCommentBodyList = []
 before = None
-author = "srbistan"
+author = "keepingdankmemesdank"
 while True:
     comments = get_comments_from_pushshift(author=author, size=100, before=before, sort='desc', sort_type='created_utc')
     if not comments: break
@@ -55,6 +55,6 @@ s['body'] = userCommentBodyList
 
 # print(s.to_string())
 # maxwellhill
-s.to_csv(r'/home/dev/Documents/NLP/redditAuthor/dataCSVs/srbistan.csv', index=False)
+s.to_csv(r'/home/dev/Documents/NLP/redditAuthor/dataCSVs/keepingdankmemesdank.csv', index=False)
 
 # I'm not sure how often you can query the Reddit API without oauth but once every two seconds should work fine
