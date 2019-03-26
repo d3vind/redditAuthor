@@ -7,7 +7,6 @@ import itertools
 # %matplotlib inline
 import matplotlib
 import matplotlib.pyplot as plt
-import string
 import nltk
 import numpy as np
 from nltk.corpus import stopwords
@@ -31,48 +30,58 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 # import for measureing accuracy score
 from sklearn.metrics import accuracy_score
-
 from sklearn.metrics import classification_report, confusion_matrix
 
-
-# import for measureing accuracy score
-
-
-df = pd.read_csv('outputfile.csv')
-
-
-csv_path = '/home/dev/Documents/NLP/redditAuthor/outputfile.csv'
 # read in our path
+csv_path = '/home/dev/Documents/NLP/redditAuthor/outputfile.csv'
 train = pd.read_csv(csv_path)
 # print(train.head())
 
-# Show word cloud
-text = df.description[0]
 
-# Create and generate a word cloud image:
-wordcloud = WordCloud().generate(text)
+# author string is defined to create the word cloud for each corresponding author
+def authorString(authorName):
+    frame = train.loc[train['author'] == authorName, 'body']
+    string = frame.to_string()
+    return string
+
+
+# generate word clouds
+# reference: https://www.datacamp.com/community/tutorials/wordcloud-python
+greyPoString = authorString("Greypo")
+srBistantoString = authorString("srbistan")
+vcwctoString = authorString("vc_wc")
+
+
+wordcloudU1 = WordCloud(collocations=False).generate(greyPoString)
+wordcloudU2 = WordCloud(collocations=False).generate(srBistantoString)
+wordcloudU3 = WordCloud(collocations=False).generate(vcwctoString)
+
 
 # Display the generated image:
-plt.imshow(wordcloud, interpolation='bilinear')
-plt.axis("off")
+plt.imshow(wordcloudU1, interpolation='bilinear')
 plt.show()
+plt.imshow(wordcloudU2, interpolation='bilinear')
+plt.show()
+plt.imshow(wordcloudU3, interpolation='bilinear')
+plt.show()
+plt.axis("off")
 
+# split train and test sets from our large csv
 X_train, X_test, y_train, y_test = train_test_split(train['body'], train['author'], test_size=0.20, random_state=42)
-
 # print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
 
 
+# tokenize and remove stop words
 count_vector = CountVectorizer(stop_words='english')
 X_train_counts = count_vector.fit_transform(X_train)
 X_train_counts.shape, X_train.shape
 
 # Tfidtransformation
 # Term Frequency times Inverse Document Frequency
-
 tf_transformer = TfidfTransformer()
 X_train_tfidf = tf_transformer.fit_transform(X_train_counts)
 X_train_tfidf.shape
-print(X_train_tfidf[0])
+# print(X_train_tfidf[0])
 
 
 # train a classifier on our data
@@ -96,10 +105,27 @@ print("Accuracy:", np.mean(y_pred == y_test))
 # Detailed report
 print(classification_report(y_test, y_pred))
 
-# Confusion Matrix
-conf_mx = confusion_matrix(y_test, y_pred)
-conf_mx
+# Confusion Matrix code sampled from
+# https://scikit-learn.org/stable/
+# auto_examples/applications/plot_face_recognition
+# .html#sphx-glr-auto-examples-applications-plot-face-recognition-py
 
+
+from sklearn.metrics import confusion_matrix
+
+labels = ['Greypo', 'srbistan', 'vc_wc']
+cm = confusion_matrix(y_test, y_pred, labels)
+print(cm)
+fig = plt.figure()
+ax = fig.add_subplot(111)
+cax = ax.matshow(cm)
+plt.title('Confusion matrix of the classifier')
+fig.colorbar(cax)
+ax.set_xticklabels([''] + labels)
+ax.set_yticklabels([''] + labels)
+plt.xlabel('Predicted')
+plt.ylabel('True')
+plt.show()
 
 
 
