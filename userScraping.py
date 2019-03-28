@@ -1,21 +1,20 @@
-#!/usr/bin/env python3
-
+#this script is set up to do one user at a time although can eaily be altered to take many
 import requests
 import time
 import pandas as pd
 
 
-def get_comments_from_pushshift(**kwargs):
+def getCommentsFromPushshift(**kwargs):
     r = requests.get("https://api.pushshift.io/reddit/comment/search/", params=kwargs)
     data = r.json()
     return data['data']
 
 
 def get_comments_from_reddit_api(comment_ids):
-    headers = {'User-agent':'Comment Collector'}
+    headers = {'User-agent': 'Comment Collector'}
     params = {}
     params['id'] = ','.join(["t1_" + id for id in comment_ids])
-    r = requests.get("https://api.reddit.com/api/info", params=params,headers=headers)
+    r = requests.get("https://api.reddit.com/api/info", params=params, headers=headers)
     data = r.json()
     return data['data']['children']
 
@@ -23,25 +22,25 @@ def get_comments_from_reddit_api(comment_ids):
 userCommentAuthorList = []
 userCommentBodyList = []
 before = None
-author = "keepingdankmemesdank"
+author = "memeinvestor_bot"
 while True:
-    comments = get_comments_from_pushshift(author=author, size=100, before=before, sort='desc', sort_type='created_utc')
+    # only allowed to take 100 at a time so we loop using the created_utc as the last known location to start looking again
+    comments = getCommentsFromPushshift(author=author, size=100, before=before, sort='desc', sort_type='created_utc')
     if not comments: break
 
-    # This will get the comment ids from Pushshift in batches of 100 -- Reddit's API only allows 100 at a time
+    # Get the comment ids from push shift to get around comment scraping limit of praw
     comment_ids = []
     for comment in comments:
-        before = comment['created_utc'] # This will keep track of your position for the next call in the while loop
+        before = comment['created_utc']
         comment_ids.append(comment['id'])
 
     # This will then pass the ids collected from Pushshift and query Reddit's API for the most up to date information
     comments = get_comments_from_reddit_api(comment_ids)
-    # here we can add the comments to a list
 
     for comment in comments:
         comment = comment['data']
 
-        # Do stuff with the comments
+        # add comments to dataFrame
         userCommentBodyList.append((comment['body']))
         userCommentAuthorList.append((comment['author']))
     # sleep to prevent getting picked on by eddit
@@ -55,6 +54,4 @@ s['body'] = userCommentBodyList
 
 # print(s.to_string())
 # maxwellhill
-s.to_csv(r'/home/dev/Documents/NLP/redditAuthor/dataCSVs/keepingdankmemesdank.csv', index=False)
-
-# I'm not sure how often you can query the Reddit API without oauth but once every two seconds should work fine
+s.to_csv(r'/home/dev/Documents/NLP/redditAuthor/dataCSVs/memeinvestor_bot', index=False)

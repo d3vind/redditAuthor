@@ -82,11 +82,15 @@ tf_transformer = TfidfTransformer()
 X_train_tfidf = tf_transformer.fit_transform(X_train_counts)
 X_train_tfidf.shape
 # print(X_train_tfidf[0])
+from sklearn.ensemble import RandomForestClassifier
 
+
+RFclassifier = RandomForestClassifier()
+RFclassifier.fit(X_train_tfidf, y_train)
 
 # train a classifier on our data
-classifier = MultinomialNB()
-classifier.fit(X_train_tfidf, y_train)
+NBclassifier = MultinomialNB()
+NBclassifier.fit(X_train_tfidf, y_train)
 
 
 # Prediction on test set
@@ -95,26 +99,31 @@ X_test_tfidf = tf_transformer.transform(X_test_counts)
 X_test.shape, X_test_tfidf.shape
 
 
-y_pred = classifier.predict(X_test_tfidf)
+y_predNB = NBclassifier.predict(X_test_tfidf)
+y_predRF = RFclassifier.predict(X_test_tfidf)
 
-# check Accuracy
-print("Accuracy Score:", accuracy_score(y_test, y_pred))
-print("Accuracy:", np.mean(y_pred == y_test))
+# check Accuracy NB
+print("Accuracy Score:", accuracy_score(y_test, y_predNB))
+print("Accuracy:", np.mean(y_predNB == y_test))
+
+# check Accuracy RF
+print("Accuracy Score:", accuracy_score(y_test, y_predRF))
+print("Accuracy:", np.mean(y_predRF == y_test))
 
 
-# Detailed report
-print(classification_report(y_test, y_pred))
+# Detailed report for Naive Bayes
+print(classification_report(y_test, y_predNB) + '\n')
 
+# Detailed report for Random Forest
+print(classification_report(y_test, y_predNB))
 # Confusion Matrix code sampled from
 # https://scikit-learn.org/stable/
 # auto_examples/applications/plot_face_recognition
 # .html#sphx-glr-auto-examples-applications-plot-face-recognition-py
 
 
-from sklearn.metrics import confusion_matrix
-
 labels = ['Greypo', 'srbistan', 'vc_wc']
-cm = confusion_matrix(y_test, y_pred, labels)
+cm = confusion_matrix(y_test, y_predNB, labels)
 print(cm)
 fig = plt.figure()
 ax = fig.add_subplot(111)
