@@ -2,3 +2,7 @@ https://github.com/anoopjeerige/kaggle-spooky-author-identification/blob/master/
 https://towardsdatascience.com/a-machine-learning-approach-to-author-identification-of-horror-novels-from-text-snippets-3f1ef5dba634
 https://www.karmalb.com/
 https://pushshift.io/
+
+
+https://www.kaggle.com/sudalairajkumar/simple-feature-engg-notebook-spooky-author
+https://www.kaggle.com/georsara1/my-lstm-solution-for-spooky-author-identification
