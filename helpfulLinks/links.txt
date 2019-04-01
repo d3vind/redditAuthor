@@ -6,3 +6,6 @@ https://pushshift.io/
 
 https://www.kaggle.com/sudalairajkumar/simple-feature-engg-notebook-spooky-author
 https://www.kaggle.com/georsara1/my-lstm-solution-for-spooky-author-identification
+
+#deep
+https://realpython.com/python-keras-text-classification/
