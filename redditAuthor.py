@@ -30,6 +30,7 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 # import for measureing accuracy score
 from sklearn.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 
 # read in our path
@@ -41,44 +42,46 @@ greypo = train.loc[train['author'] == 'Greypo', 'body']
 srbistan = train.loc[train['author'] == 'srbistan', 'body']
 vc_wc = train.loc[train['author'] == 'vc_wc', 'body']
 
-#user counts
-print (vc_wc.count())
-print (greypo.count())
-print (srbistan.count())
+# #user counts
+# print (vc_wc.count())
+# print (greypo.count())
+# print (srbistan.count())
 
 # author string is defined to create the word cloud for each corresponding author
-def authorString(authorName):
-    frame = train.loc[train['author'] == authorName, 'body']
-    string = frame.to_string()
-    return string
+# def authorString(authorName):
+#     frame = train.loc[train['author'] == authorName, 'body']
+#     string = frame.to_string()
+#     return string
 
 
 # generate word clouds
 # reference: https://www.datacamp.com/community/tutorials/wordcloud-python
-greyPoString = authorString("Greypo")
-srBistantoString = authorString("srbistan")
-vcwctoString = authorString("vc_wc")
+# greyPoString = authorString("Greypo")
+# srBistantoString = authorString("srbistan")
+# vcwctoString = authorString("vc_wc")
 
-
-
-wordcloudU1 = WordCloud(collocations=False).generate(greyPoString)
-wordcloudU2 = WordCloud(collocations=False).generate(srBistantoString)
-wordcloudU3 = WordCloud(collocations=False).generate(vcwctoString)
+#
+#
+# wordcloudU1 = WordCloud(collocations=False).generate(greyPoString)
+# wordcloudU2 = WordCloud(collocations=False).generate(srBistantoString)
+# wordcloudU3 = WordCloud(collocations=False).generate(vcwctoString)
 
 
 # Display the generated image:
-plt.imshow(wordcloudU1, interpolation='bilinear')
-plt.show()
-plt.imshow(wordcloudU2, interpolation='bilinear')
-plt.show()
-plt.imshow(wordcloudU3, interpolation='bilinear')
-plt.show()
-plt.axis("off")
+# plt.imshow(wordcloudU1, interpolation='bilinear')
+# plt.show()
+# plt.imshow(wordcloudU2, interpolation='bilinear')
+# plt.show()
+# plt.imshow(wordcloudU3, interpolation='bilinear')
+# plt.show()
+# plt.axis("off")
 
 # split train and test sets from our large csv
 X_train, X_test, y_train, y_test = train_test_split(train['body'], train['author'], test_size=0.20, random_state=42)
 # print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
 
+
+# 80-20 splitting the dataset (80%->Training and 20%->Validation)
 
 # tokenize and remove stop words
 count_vector = CountVectorizer(stop_words='english')
@@ -91,15 +94,14 @@ tf_transformer = TfidfTransformer()
 X_train_tfidf = tf_transformer.fit_transform(X_train_counts)
 X_train_tfidf.shape
 # print(X_train_tfidf[0])
-from sklearn.ensemble import RandomForestClassifier
 
 
 RFclassifier = RandomForestClassifier()
-RFclassifier.fit(X_train_tfidf, y_train)
+RFclassifier.fit(X_train_counts, y_train)
 
 # train a classifier on our data
 NBclassifier = MultinomialNB()
-NBclassifier.fit(X_train_tfidf, y_train)
+NBclassifier.fit(X_train_counts, y_train)
 
 
 # Prediction on test set
@@ -108,15 +110,16 @@ X_test_tfidf = tf_transformer.transform(X_test_counts)
 X_test.shape, X_test_tfidf.shape
 
 
-y_predNB = NBclassifier.predict(X_test_tfidf)
-y_predRF = RFclassifier.predict(X_test_tfidf)
+y_predNB = NBclassifier.predict(X_test_counts)
+y_predRF = RFclassifier.predict(X_test_counts)
 
 # check Accuracy NB
-print("Accuracy Score:", accuracy_score(y_test, y_predNB))
+print("Accuracy Score Test Naive Bayes:", accuracy_score(y_test, y_predNB))
+
 print("Accuracy:", np.mean(y_predNB == y_test))
 
 # check Accuracy RF
-print("Accuracy Score:", accuracy_score(y_test, y_predRF))
+print("Accuracy Score Test Random Forest:", accuracy_score(y_test, y_predRF))
 print("Accuracy:", np.mean(y_predRF == y_test))
 
 
@@ -124,26 +127,27 @@ print("Accuracy:", np.mean(y_predRF == y_test))
 print(classification_report(y_test, y_predNB) + '\n')
 
 # Detailed report for Random Forest
-print(classification_report(y_test, y_predNB))
-# Confusion Matrix code sampled from
+print(classification_report(y_test, y_predRF))
+
+
 # https://scikit-learn.org/stable/
 # auto_examples/applications/plot_face_recognition
 # .html#sphx-glr-auto-examples-applications-plot-face-recognition-py
 
 
-labels = ['Greypo', 'srbistan', 'vc_wc']
-cm = confusion_matrix(y_test, y_predNB, labels)
-print(cm)
-fig = plt.figure()
-ax = fig.add_subplot(111)
-cax = ax.matshow(cm)
-plt.title('Confusion matrix of the classifier')
-fig.colorbar(cax)
-ax.set_xticklabels([''] + labels)
-ax.set_yticklabels([''] + labels)
-plt.xlabel('Predicted')
-plt.ylabel('True')
-plt.show()
+# labels = ['Greypo', 'srbistan', 'vc_wc']
+# cm = confusion_matrix(y_test, y_predNB, labels)
+# print(cm)
+# fig = plt.figure()
+# ax = fig.add_subplot(111)
+# cax = ax.matshow(cm)
+# plt.title('Confusion matrix of the classifier')
+# fig.colorbar(cax)
+# ax.set_xticklabels([''] + labels)
+# ax.set_yticklabels([''] + labels)
+# plt.xlabel('Predicted')
+# plt.ylabel('True')
+# plt.show()
 
 
 
