@@ -37,6 +37,14 @@ csv_path = '/home/dev/Documents/NLP/redditAuthor/outputfile.csv'
 train = pd.read_csv(csv_path)
 # print(train.head())
 
+greypo = train.loc[train['author'] == 'Greypo', 'body']
+srbistan = train.loc[train['author'] == 'srbistan', 'body']
+vc_wc = train.loc[train['author'] == 'vc_wc', 'body']
+
+#user counts
+print (vc_wc.count())
+print (greypo.count())
+print (srbistan.count())
 
 # author string is defined to create the word cloud for each corresponding author
 def authorString(authorName):
@@ -50,6 +58,7 @@ def authorString(authorName):
 greyPoString = authorString("Greypo")
 srBistantoString = authorString("srbistan")
 vcwctoString = authorString("vc_wc")
+
 
 
 wordcloudU1 = WordCloud(collocations=False).generate(greyPoString)
