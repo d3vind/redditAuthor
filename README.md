@@ -1,6 +1,5 @@
-# Project Title
-
-Project to classify the author of a reddit post given a post
+# Author Identification of reddit users using various Natural Language Processing and Machine Learning Techniques
+NLTK, Bag of Words etc.
 ## Getting Started
 
 
@@ -16,10 +15,7 @@ Give examples
 ```
 
 ### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
+Install dependencies listed blow
 
 ```
 sudo pip install wordcloud
@@ -29,29 +25,17 @@ sudo pip install scikit-learn
 sudo pip install Pillow
 sudo pip install pandas
 
-```
 
-And repeat
 
-```
-until finished
 ```
 
 End with an example of getting some data out of the system or using it for a little demo
 
 ## Running the tests
+To run simple navigate to the root folder and run ./redditAuthor.py
 
-Explain how to run the automated tests for this system
 
 ### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
 
 Explain what these tests test and why
 
@@ -79,7 +63,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Devin DElaney** - *Initial work* - [d3vind](https://github.com/d3vind)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
@@ -87,8 +71,4 @@ See also the list of [contributors](https://github.com/your/project/contributors
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
-## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
