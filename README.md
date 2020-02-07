@@ -33,6 +33,7 @@ End with an example of getting some data out of the system or using it for a lit
 
 ## Running the tests
 To run simple navigate to the root folder and run ./redditAuthor.py
+You will need to first either run the script to mine reddit user data or use the data provided
 
 
 ### Break down into end to end tests
